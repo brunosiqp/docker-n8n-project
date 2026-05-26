@@ -6,18 +6,31 @@ services:
     restart: always
     ports:
       - "5678:5678"
+
     environment:
-      - DB_TYPE=postgresdb
-      - DB_POSTGRESDB_HOST=postgres
-      - DB_POSTGRESDB_PORT=5432
+      # Database Provider
+      - DB_TYPE=${DB_TYPE}
+
+      # PostgreSQL
+      - DB_POSTGRESDB_HOST=${DB_POSTGRESDB_HOST}
+      - DB_POSTGRESDB_PORT=${DB_POSTGRESDB_PORT}
       - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
       - DB_POSTGRESDB_USER=${POSTGRES_USER}
       - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
 
+      # Microsoft SQL Server
+      - DB_MSSQLDB_HOST=${DB_MSSQLDB_HOST}
+      - DB_MSSQLDB_PORT=${DB_MSSQLDB_PORT}
+      - DB_MSSQLDB_DATABASE=${DB_MSSQLDB_DATABASE}
+      - DB_MSSQLDB_USER=${DB_MSSQLDB_USER}
+      - DB_MSSQLDB_PASSWORD=${DB_MSSQLDB_PASSWORD}
+
+      # n8n Auth
       - N8N_BASIC_AUTH_ACTIVE=true
       - N8N_BASIC_AUTH_USER=${N8N_USER}
       - N8N_BASIC_AUTH_PASSWORD=${N8N_PASSWORD}
 
+      # n8n Config
       - N8N_HOST=localhost
       - N8N_PORT=5678
       - N8N_PROTOCOL=http
@@ -27,16 +40,35 @@ services:
 
     depends_on:
       - postgres
+      - mssql
 
   postgres:
     image: postgres:15
     restart: always
+
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: always
+    container_name: n8n-mssql
+
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${DB_MSSQLDB_PASSWORD}
+
+    ports:
+      - "1433:1433"
+
+    volumes:
+      - mssql_data:/var/opt/mssql
+
 volumes:
   postgres_data:
+  mssql_data:
