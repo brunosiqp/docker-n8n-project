@@ -8,7 +8,7 @@ services:
       - "5678:5678"
 
     environment:
-      # Database Provider
+      # Database selector
       - DB_TYPE=${DB_TYPE}
 
       # PostgreSQL
@@ -18,19 +18,19 @@ services:
       - DB_POSTGRESDB_USER=${POSTGRES_USER}
       - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
 
-      # Microsoft SQL Server
+      # MSSQL
       - DB_MSSQLDB_HOST=${DB_MSSQLDB_HOST}
       - DB_MSSQLDB_PORT=${DB_MSSQLDB_PORT}
       - DB_MSSQLDB_DATABASE=${DB_MSSQLDB_DATABASE}
       - DB_MSSQLDB_USER=${DB_MSSQLDB_USER}
       - DB_MSSQLDB_PASSWORD=${DB_MSSQLDB_PASSWORD}
 
-      # n8n Auth
+      # Auth
       - N8N_BASIC_AUTH_ACTIVE=true
       - N8N_BASIC_AUTH_USER=${N8N_USER}
       - N8N_BASIC_AUTH_PASSWORD=${N8N_PASSWORD}
 
-      # n8n Config
+      # Core config
       - N8N_HOST=localhost
       - N8N_PORT=5678
       - N8N_PROTOCOL=http
